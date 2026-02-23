@@ -1,11 +1,16 @@
 'use client';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { GraduationCap, MapPin, Heart, Lightbulb, Rocket, Target, Star, Sparkles, Zap, Calendar, Award, TrendingUp, Users, Book, Code, Brain, School, Route, Cpu, Menu, X, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
 
 export default function About() {
+  const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState('education');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const journey = [
     {
@@ -89,7 +94,7 @@ export default function About() {
     }
   ];
 
-  // Particle data untuk animasi
+  // Particle data untuk animasi - HAPUS Math.random(), BUAT KONSTAN
   const particles = [
     { icon: "💻", delay: 0, duration: 8, size: "text-4xl sm:text-6xl", x: 5, y: 10 },
     { icon: "🚀", delay: 1, duration: 9, size: "text-5xl sm:text-7xl", x: 85, y: 15 },
@@ -123,15 +128,29 @@ export default function About() {
     }
   ];
 
+  // Jangan render sampai mounted
+  if (!mounted) {
+    return (
+      <section id="about" className="min-h-screen relative py-16 sm:py-20 bg-gradient-to-br from-white via-purple-50 to-blue-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-purple-200 animate-pulse" />
+            <h2 className="text-3xl font-bold text-gray-900">Loading About...</h2>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="about" className="min-h-screen relative py-16 sm:py-20 bg-gradient-to-br from-white via-purple-50 to-blue-50 overflow-hidden">
       
-      {/* BACKGROUND ANIMATIONS */}
+      {/* BACKGROUND ANIMATIONS - TANPA Math.random() */}
       <div className="absolute inset-0">
         {/* Main Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-white via-purple-50 to-blue-50" />
         
-        {/* Noise Texture Overlay */}
+        {/* Noise Texture Overlay - KONSTAN */}
         <div 
           className="absolute inset-0 opacity-[0.02]"
           style={{
@@ -156,15 +175,15 @@ export default function About() {
           }}
         />
         
-        {/* Animated Particles */}
+        {/* Animated Particles - TANPA Math.random(), PAKAI KONSTAN */}
         <div className="absolute inset-0">
-          {[...Array(15)].map((_, i) => (
+          {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map((i) => (
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-purple-400 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: `${i * 6}%`,
+                top: `${(i * 7) % 100}%`,
               }}
               animate={{
                 y: [0, -40, 0],
@@ -172,9 +191,9 @@ export default function About() {
                 scale: [0.5, 1.2, 0.5],
               }}
               transition={{
-                duration: 4 + Math.random() * 3,
+                duration: 4 + (i % 3),
                 repeat: Infinity,
-                delay: Math.random() * 2,
+                delay: i * 0.2,
               }}
             />
           ))}
@@ -298,7 +317,7 @@ export default function About() {
           </motion.p>
         </motion.div>
 
-        {/* RESPONSIVE TAB NAVIGATION - IMPROVED VISUAL */}
+        {/* RESPONSIVE TAB NAVIGATION */}
         <motion.div
           className="flex justify-center mb-8 sm:mb-12"
           initial={{ opacity: 0, y: 30 }}
@@ -336,14 +355,14 @@ export default function About() {
             </div>
           </div>
 
-          {/* Mobile Tabs - IMPROVED VISUAL */}
+          {/* Mobile Tabs */}
           <div className="md:hidden w-full max-w-sm">
-            {/* Mobile Menu Button - LEBIH CLEAR KALO BISA DIKLIK */}
+            {/* Mobile Menu Button */}
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-2xl p-4 border border-purple-400/50 shadow-lg flex items-center justify-between group transition-all duration-300"
               whileTap={{ scale: 0.95 }}
-              whileHover={{ y: -2, shadow: "0 10px 25px -5px rgba(139, 92, 246, 0.4)" }}
+              whileHover={{ y: -2 }}
             >
               <div className="flex items-center gap-3">
                 <motion.div
@@ -374,7 +393,7 @@ export default function About() {
               </motion.div>
             </motion.button>
 
-            {/* Mobile Dropdown Menu - IMPROVED VISUAL */}
+            {/* Mobile Dropdown Menu */}
             <motion.div
               className="mt-2 bg-white/90 backdrop-blur-lg rounded-2xl border border-purple-400/30 shadow-xl overflow-hidden"
               initial={{ opacity: 0, height: 0 }}
@@ -442,7 +461,7 @@ export default function About() {
               </div>
             </motion.div>
 
-            {/* Visual indicator ketika dropdown terbuka */}
+            {/* Visual indicator */}
             {isMobileMenuOpen && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -453,7 +472,8 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* CONTENT AREA */}
+        {/* CONTENT AREA - SISANYA SAMA PERSIS */}
+        {/* ... (semua konten lainnya tetap sama) ... */}
         <div className="max-w-6xl mx-auto">
           
           {/* EDUCATION SECTION */}

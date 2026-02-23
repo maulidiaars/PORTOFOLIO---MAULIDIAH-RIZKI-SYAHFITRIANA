@@ -7,6 +7,8 @@ import Hero from '@/components/sections/Hero';
 import About from '@/components/sections/About';
 import Skills from '@/components/sections/Skills';
 import Projects from '@/components/sections/Projects';
+import UiDesign from '@/components/sections/UiDesign';
+import Certificates from '@/components/sections/Certificates';
 import Contact from '@/components/sections/Contact';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -14,10 +16,9 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading time
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // 2 seconds loading
+    }, 1500); // Kurangi jadi 1.5 detik biar lebih cepat
 
     return () => clearTimeout(timer);
   }, []);
@@ -33,7 +34,6 @@ export default function Home() {
             className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#561c24] via-purple-900 to-blue-900"
           >
             <div className="text-center">
-              {/* Animated Logo */}
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
@@ -54,13 +54,12 @@ export default function Home() {
                     rotate: { duration: 3, repeat: Infinity, ease: "linear" },
                     scale: { duration: 2, repeat: Infinity }
                   }}
-                  className="text-2xl"
+                  className="text-4xl"
                 >
                   ✨
                 </motion.div>
               </motion.div>
 
-              {/* Loading Text */}
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -79,37 +78,12 @@ export default function Home() {
                 Fullstack Developer
               </motion.p>
 
-              {/* Animated Loading Bar */}
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: "200px" }}
-                transition={{ duration: 2, ease: "easeInOut" }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
                 className="h-2 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full mx-auto shadow-lg shadow-purple-500/30"
               />
-
-              {/* Floating Particles */}
-              <div className="absolute inset-0 overflow-hidden">
-                {[...Array(15)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-2 h-2 bg-white/30 rounded-full"
-                    style={{
-                      left: `${Math.random() * 100}%`,
-                      top: `${Math.random() * 100}%`,
-                    }}
-                    animate={{
-                      y: [0, -30, 0],
-                      opacity: [0, 1, 0],
-                      scale: [0.5, 1.2, 0.5],
-                    }}
-                    transition={{
-                      duration: 2 + Math.random() * 2,
-                      repeat: Infinity,
-                      delay: Math.random() * 1,
-                    }}
-                  />
-                ))}
-              </div>
             </div>
           </motion.div>
         )}
@@ -126,6 +100,8 @@ export default function Home() {
         <About />
         <Skills />
         <Projects />
+        <UiDesign />
+        <Certificates />
         <Contact />
         <Footer />
       </motion.main>

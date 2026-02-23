@@ -2,18 +2,26 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sparkles, Home, User, Code, Briefcase, Clock, Mail } from 'lucide-react';
+import { Menu, X, Sparkles, Home, User, Code, Briefcase, Palette, Award, Mail } from 'lucide-react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [mounted, setMounted] = useState(false);
+
+  // Effect untuk mounted
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
+    if (!mounted) return;
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
       
-      const sections = ['home', 'about', 'skills', 'projects', 'experience', 'contact'];
+      const sections = ['home', 'about', 'skills', 'projects', 'ui-design', 'certificates', 'contact'];
       const current = sections.find(section => {
         const element = document.getElementById(section);
         if (element) {
@@ -27,44 +35,18 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [mounted]);
 
   const navItems = [
     { name: 'Home', href: '#home', icon: Home },
     { name: 'About', href: '#about', icon: User },
     { name: 'Skills', href: '#skills', icon: Code },
     { name: 'Projects', href: '#projects', icon: Briefcase },
+    { name: 'UI Design', href: '#ui-design', icon: Palette },
+    { name: 'Certificates', href: '#certificates', icon: Award },
     { name: 'Contact', href: '#contact', icon: Mail },
   ];
 
-  const scrollToSection = (href: string) => {
-    // Close mobile menu dulu
-    setIsMobileMenuOpen(false);
-    
-    // Kasih delay sebentar biar mobile menu benar-benar tertutup dulu
-    setTimeout(() => {
-      const sectionId = href.replace('#', '');
-      const element = document.getElementById(sectionId);
-      
-      if (element) {
-        // Hitung posisi yang tepat
-        const elementTop = element.offsetTop;
-        const offset = 80; // Sesuaikan dengan tinggi navbar
-        
-        window.scrollTo({
-          top: elementTop - offset,
-          behavior: 'smooth'
-        });
-        
-        // Force update active section setelah scroll
-        setTimeout(() => {
-          setActiveSection(sectionId);
-        }, 600);
-      }
-    }, 100);
-  };
-
-  // Alternative method yang lebih reliable
   const scrollToSectionAlternative = (href: string) => {
     setIsMobileMenuOpen(false);
     
@@ -73,17 +55,40 @@ const Navbar = () => {
       const element = document.getElementById(sectionId);
       
       if (element) {
-        // Method yang lebih simple dan reliable
         element.scrollIntoView({ 
           behavior: 'smooth',
           block: 'start'
         });
         
-        // Update URL hash (optional, tapi bisa bantu)
         window.history.pushState(null, '', href);
       }
     }, 150);
   };
+
+  // Jangan render sampai mounted untuk menghindari mismatch
+  if (!mounted) {
+    return (
+      <nav className="fixed top-0 w-full z-50 bg-gradient-to-r from-pink-500/95 via-purple-500/95 to-blue-500/95 backdrop-blur-xl shadow-2xl border-b border-white/20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg border border-white/20">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold text-white drop-shadow-lg">
+                  Maulidiah
+                </span>
+                <span className="text-xs text-white/70 font-medium bg-white/10 px-2 py-1 rounded-full mt-1">
+                  Fullstack / Frontend Developer
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <motion.nav
@@ -97,7 +102,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-3">
-          {/* Logo dengan Subtitle */}
+          {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.02 }}
             className="flex items-center gap-3"
@@ -117,7 +122,7 @@ const Navbar = () => {
                 />
               </div>
               <span className="text-xs text-white/70 font-medium bg-white/10 px-2 py-1 rounded-full mt-1 backdrop-blur-sm">
-                Fullsatck / Frontend Developer
+                Fullstack / Frontend Developer
               </span>
             </div>
           </motion.div>

@@ -1,12 +1,16 @@
-// components/Skills.tsx
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { Code, Palette, Database, Cloud, Zap, Sparkles, Target, Users, Heart, Brain } from 'lucide-react';
-import { useState } from 'react';
 
 export default function Skills() {
+  const [mounted, setMounted] = useState(false);
   const [tabAktif, setTabAktif] = useState<string>("semua");
   const [kategoriTerbuka, setKategoriTerbuka] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const skillTeknis = {
     frontend: [
@@ -115,10 +119,22 @@ export default function Skills() {
     setKategoriTerbuka(kategoriTerbuka === categoryId ? null : categoryId);
   };
 
+  // Jangan render sampai mounted
+  if (!mounted) {
+    return (
+      <section id="skills" className="py-24 bg-gradient-to-br from-red-950 via-purple-900 to-blue-900">
+        <div className="container mx-auto px-4 text-center">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-purple-800 animate-pulse" />
+          <h2 className="text-3xl text-white">Loading Skills...</h2>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="skills" className="py-24 bg-gradient-to-br from-red-950 via-purple-900 to-blue-900 relative overflow-hidden">
       
-      {/* BACKGROUND */}
+      {/* BACKGROUND - TANPA Math.random() */}
       <div className="absolute inset-0">
         <motion.div 
           className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-pink-500/15 to-blue-600/20"
@@ -135,30 +151,30 @@ export default function Skills() {
           }}
         />
         
-        {/* Particles Animasi */}
+        {/* Particles Animasi - TANPA Math.random() */}
         <div className="absolute inset-0">
-          {[...Array(15)].map((_, i) => (
+          {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map((i) => (
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-white rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: `${i * 6}%`,
+                top: `${(i * 7) % 100}%`,
               }}
               animate={{
                 y: [0, -30, 0],
                 opacity: [0, 1, 0],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 3 + (i % 2),
                 repeat: Infinity,
-                delay: Math.random() * 2,
+                delay: i * 0.2,
               }}
             />
           ))}
         </div>
 
-        {/* Elemen Floating */}
+        {/* Elemen Floating - TANPA random */}
         {[
           { icon: '⚡', top: '10%', left: '5%', delay: 0 },
           { icon: '🎨', top: '15%', right: '8%', delay: 0.3 },
@@ -177,6 +193,7 @@ export default function Skills() {
         ))}
       </div>
 
+      {/* KONTEN - SISANYA SAMA PERSIS */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header Section */}
         <motion.div
@@ -382,7 +399,7 @@ export default function Skills() {
                     </motion.div>
                   </div>
 
-                  {/* Konten Expandable - DIBAGI 2 KOLOM */}
+                  {/* Konten Expandable */}
                   <AnimatePresence>
                     {kategoriTerbuka === kategori.id && (
                       <motion.div
@@ -415,7 +432,7 @@ export default function Skills() {
                                 </span>
                               </div>
                               
-                              {/* Progress Bar Panjang dengan Animasi */}
+                              {/* Progress Bar */}
                               <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                                 <motion.div
                                   className={`h-3 rounded-full bg-gradient-to-r ${skill.warna} relative overflow-hidden`}

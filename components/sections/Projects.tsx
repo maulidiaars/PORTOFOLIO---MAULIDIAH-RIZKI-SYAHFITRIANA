@@ -5,12 +5,17 @@ import { useRef, useState, useEffect } from 'react';
 import { ExternalLink, ArrowUpRight, Eye, X, ChevronLeft, ChevronRight, Play, Star, Sparkles, Github, Code, Palette, Database, Zap, Cpu, Smartphone, Globe } from 'lucide-react';
 
 export default function Projects() {
+  const [mounted, setMounted] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [autoSlideIndex, setAutoSlideIndex] = useState(0);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const projects = [
     {
@@ -64,22 +69,21 @@ export default function Projects() {
     },
     {
       id: 3,
-      title: "UI/UX Collection",
-      description: "Koleksi design system dan prototype untuk berbagai platform yang saya buat selama eksplorasi desain.",
-      tech: ["Figma", "Prototyping", "Design System", "UI/UX"],
-      image: "/images/projects/project-3/cover ui.png",
+      title: "PT Denso Indonesia",
+      description: "Mengembangkan Dashboard Web PC Material Logistic BO Control dan Pembuatan Live dashboard untuk tracker barang BO.",
+      tech: ["JavaScript", "HTML", "CSS", "Chart.js", "REST API"],
+      image: "/images/projects/project-3/cover denso.png",
       screenshots: [
-        "/images/projects/project-3/cover ui.png",
         "/images/projects/project-3/ss1.png",
-        "/images/projects/project-3/ss2.png",
-        "/images/projects/project-3/ss3.png",
+        "/images/projects/project-3/mockup bo control.png",
+        "/images/projects/project-3/1.png",
       ],
       liveUrl: "#",
       githubUrl: "#",
-      accentColor: "from-pink-600 to-purple-600",
-      icon: <Palette className="w-6 h-6" />,
-      cardColor: "bg-gradient-to-br from-pink-600 to-purple-600",
-      borderColor: "border-pink-400",
+      accentColor: "from-red-600 to-orange-600",
+      icon: <Zap className="w-6 h-6" />,
+      cardColor: "bg-gradient-to-br from-red-600 to-orange-600",
+      borderColor: "border-red-400",
       status: "completed"
     }
   ];
@@ -89,12 +93,14 @@ export default function Projects() {
 
   // Auto slide effect
   useEffect(() => {
+    if (!mounted) return;
+    
     const interval = setInterval(() => {
       setAutoSlideIndex((prev) => (prev + 1) % allScreenshots.length);
-    }, 3000); // Change image every 3 seconds
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, [allScreenshots.length]);
+  }, [allScreenshots.length, mounted]);
 
   const openPreview = (projectId: number) => {
     setSelectedProject(projectId);
@@ -124,19 +130,19 @@ export default function Projects() {
 
   // Auto slide untuk modal preview
   useEffect(() => {
-    if (!selectedProject) return;
+    if (!selectedProject || !mounted) return;
     
     const interval = setInterval(() => {
       const project = projects.find(p => p.id === selectedProject);
       if (project) {
         setCurrentImageIndex((prev) => (prev + 1) % project.screenshots.length);
       }
-    }, 4000); // Ganti gambar setiap 4 detik di modal
+    }, 4000);
 
     return () => clearInterval(interval);
-  }, [selectedProject]);
+  }, [selectedProject, mounted]);
 
-  // Particle data untuk animasi background - SAMA DENGAN ABOUT
+  // Particle data untuk animasi background - BUAT KONSTAN (HAPUS RANDOM)
   const particles = [
     { icon: "💻", delay: 0, duration: 8, size: "text-6xl", x: 5, y: 10 },
     { icon: "🚀", delay: 1, duration: 9, size: "text-7xl", x: 85, y: 15 },
@@ -152,10 +158,22 @@ export default function Projects() {
     { icon: "🎮", delay: 11, duration: 19, size: "text-7xl", x: 70, y: 35 }
   ];
 
+  // Jangan render sampai mounted
+  if (!mounted) {
+    return (
+      <section id="projects" className="min-h-screen relative py-20 bg-gradient-to-br from-white via-purple-50 to-blue-50">
+        <div className="container mx-auto px-4 text-center">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-purple-200 animate-pulse" />
+          <h2 className="text-3xl text-gray-900">Loading Projects...</h2>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="projects" className="min-h-screen relative py-20 bg-gradient-to-br from-white via-purple-50 to-blue-50 overflow-hidden">
       
-      {/* BACKGROUND DENGAN BANYAK ICON BESAR - SAMA DENGAN ABOUT */}
+      {/* BACKGROUND DENGAN BANYAK ICON BESAR - TANPA RANDOM */}
       <div className="absolute inset-0">
         {/* Main Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-white via-purple-50 to-blue-50" />
@@ -185,15 +203,15 @@ export default function Projects() {
           }}
         />
         
-        {/* Animated Particles */}
+        {/* Animated Particles - TANPA RANDOM */}
         <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
+          {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map((i) => (
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-purple-400 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: `${i * 6}%`,
+                top: `${(i * 7) % 100}%`,
               }}
               animate={{
                 y: [0, -60, 0],
@@ -201,15 +219,15 @@ export default function Projects() {
                 scale: [0.5, 1.2, 0.5],
               }}
               transition={{
-                duration: 5 + Math.random() * 4,
+                duration: 5 + (i % 4),
                 repeat: Infinity,
-                delay: Math.random() * 3,
+                delay: i * 0.2,
               }}
             />
           ))}
         </div>
 
-        {/* Floating Icons Besar - SAMA DENGAN ABOUT */}
+        {/* Floating Icons Besar */}
         {particles.map((particle, index) => (
           <motion.div
             key={index}
@@ -268,7 +286,7 @@ export default function Projects() {
           animate={isInView ? "visible" : "hidden"}
           className="max-w-6xl mx-auto"
         >
-          {/* HEADER - SAMA DENGAN ABOUT */}
+          {/* HEADER */}
           <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 50 }}
@@ -332,7 +350,7 @@ export default function Projects() {
             </motion.p>
           </motion.div>
 
-          {/* Projects Grid - DESIGN SAMA DENGAN ABOUT */}
+          {/* Projects Grid - SISANYA SAMA */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             {projects.map((project, index) => (
               <motion.div
@@ -396,7 +414,7 @@ export default function Projects() {
             ))}
           </div>
 
-          {/* NEW CTA SECTION WITH IMAGE SLIDER */}
+          {/* CTA SECTION WITH IMAGE SLIDER */}
           <motion.div
             className="grid lg:grid-cols-2 gap-8 items-center mb-16"
             initial={{ opacity: 0, y: 30 }}
@@ -428,17 +446,16 @@ export default function Projects() {
                   </div>
                 </div>
                 
-              <motion.a
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href="#contact"
-                className="w-full bg-white text-purple-600 py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:shadow-lg transition-all shadow-md"
-              >
-                <ExternalLink className="w-4 h-4" />
-                Mulai Project
-                <Zap className="w-4 h-4" />
-              </motion.a>
-
+                <motion.a
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  href="#contact"
+                  className="w-full bg-white text-purple-600 py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:shadow-lg transition-all shadow-md"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Mulai Project
+                  <Zap className="w-4 h-4" />
+                </motion.a>
               </motion.div>
 
               {/* Additional Info */}
@@ -483,6 +500,10 @@ export default function Projects() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.8, ease: "easeInOut" }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/images/placeholder.png';
+                  }}
                 />
               </AnimatePresence>
 
@@ -514,7 +535,7 @@ export default function Projects() {
         </motion.div>
       </div>
 
-      {/* PREVIEW MODAL - RESPONSIVE & FIXED HEIGHT */}
+      {/* PREVIEW MODAL */}
       <AnimatePresence>
         {selectedProject && selectedProjectData && (
           <motion.div
@@ -546,7 +567,7 @@ export default function Projects() {
 
               {/* Modal Content */}
               <div className="relative z-10 flex flex-col h-full">
-                {/* Header - Fixed Height */}
+                {/* Header */}
                 <div className="p-4 sm:p-6 border-b border-purple-500/20 bg-gradient-to-r from-purple-900/30 to-transparent flex-shrink-0">
                   <div className="flex items-start gap-3 sm:gap-4">
                     <motion.div
@@ -567,7 +588,7 @@ export default function Projects() {
                   </div>
                 </div>
 
-                {/* Image Carousel - Flexible Height dengan Scroll */}
+                {/* Image Carousel */}
                 <div className="flex-1 min-h-0 p-4 sm:p-6 flex items-center justify-center bg-gradient-to-br from-gray-800/50 to-purple-900/30 relative overflow-hidden">
                   <div className="relative w-full h-full flex items-center justify-center">
                     <AnimatePresence mode="wait">
@@ -587,6 +608,10 @@ export default function Projects() {
                             maxHeight: 'calc(95vh - 200px)',
                             width: 'auto',
                             height: 'auto'
+                          }}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/images/placeholder.png';
                           }}
                         />
                       </motion.div>

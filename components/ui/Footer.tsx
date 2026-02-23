@@ -1,11 +1,20 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { Heart, ArrowUp, Mail, Github, Linkedin, Instagram, Sparkles, Code, Coffee } from 'lucide-react';
 
 const Footer = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const socialIcons = [
@@ -34,6 +43,19 @@ const Footer = () => {
       color: 'hover:bg-pink-100 hover:text-pink-600'
     }
   ];
+
+  // Jangan render sampai mounted
+  if (!mounted) {
+    return (
+      <footer className="bg-white text-gray-800 relative border-t border-gray-200">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center text-gray-500 text-sm">
+            Loading...
+          </div>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className="bg-white text-gray-800 relative overflow-hidden border-t border-gray-200">
@@ -106,6 +128,7 @@ const Footer = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
             className="flex items-center gap-4"
           >
             <div className="w-14 h-14 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -124,6 +147,7 @@ const Footer = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ delay: 0.2 }}
             className="flex gap-3"
           >
@@ -146,6 +170,7 @@ const Footer = () => {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
             transition={{ delay: 0.4 }}
             className="flex items-center gap-4"
           >
@@ -179,6 +204,7 @@ const Footer = () => {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
           transition={{ delay: 0.6 }}
           className="text-center mt-6 pt-6 border-t border-gray-200"
         >

@@ -1,12 +1,17 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Mail, Github, Linkedin, Instagram, Phone, MapPin, Sparkles, MessageCircle, Heart, Code, Palette } from 'lucide-react';
 
 const Contact = () => {
+  const [mounted, setMounted] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const contactInfo = [
     {
@@ -53,7 +58,7 @@ const Contact = () => {
     }
   ];
 
-  // Floating icons dan emoji
+  // Floating icons dan emoji - TANPA RANDOM
   const floatingIcons = [
     { icon: '💻', top: '10%', left: '5%', delay: 0 },
     { icon: '📱', top: '15%', right: '8%', delay: 0.3 },
@@ -67,10 +72,22 @@ const Contact = () => {
     { icon: '💖', top: '85%', left: '15%', delay: 2.7 },
   ];
 
+  // Jangan render sampai mounted
+  if (!mounted) {
+    return (
+      <section id="contact" className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-pink-800 to-blue-900">
+        <div className="container mx-auto px-4 text-center">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-purple-700 animate-pulse" />
+          <h2 className="text-3xl text-white">Loading Contact...</h2>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="contact" className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-pink-800 to-blue-900 py-16 lg:py-20 overflow-hidden">
       
-      {/* Background Effects - BANYAK PARTIKEL */}
+      {/* Background Effects - TANPA RANDOM */}
       <div className="absolute inset-0">
         {/* Animated Gradient Overlay */}
         <motion.div 
@@ -88,14 +105,14 @@ const Contact = () => {
           }}
         />
         
-        {/* Floating Particles - BANYAK BANGET */}
-        {[...Array(30)].map((_, i) => (
+        {/* Floating Particles - TANPA RANDOM */}
+        {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30].map((i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-white rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${i * 3}%`,
+              top: `${(i * 5) % 100}%`,
             }}
             animate={{
               y: [0, -40, 0],
@@ -103,9 +120,9 @@ const Contact = () => {
               scale: [0, 1, 0],
             }}
             transition={{
-              duration: 4 + Math.random() * 3,
+              duration: 4 + (i % 3),
               repeat: Infinity,
-              delay: Math.random() * 5,
+              delay: i * 0.1,
             }}
           />
         ))}
@@ -143,7 +160,7 @@ const Contact = () => {
           </motion.div>
         ))}
 
-        {/* Kartun Orang - Wave Hand */}
+        {/* Kartun Orang */}
         <motion.div
           className="absolute bottom-10 left-10 hidden lg:block"
           initial={{ opacity: 0, x: -50 }}
@@ -164,7 +181,7 @@ const Contact = () => {
           </motion.div>
         </motion.div>
 
-        {/* Kartun Lain - Floating Heart */}
+        {/* Kartun Lain */}
         <motion.div
           className="absolute top-20 right-20 hidden lg:block"
           initial={{ opacity: 0, y: -50 }}
@@ -194,7 +211,7 @@ const Contact = () => {
           animate={isInView ? "visible" : "hidden"}
           className="max-w-4xl mx-auto"
         >
-          {/* Header - BAHASA INDONESIA */}
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
